@@ -9,12 +9,15 @@ const char PIECE_CHARS[] = {
 	[W_ROOK_IDX] = 'R',
 	[W_BISHOP_IDX] = 'B',
 	[W_KNIGHT_IDX] = 'N',
-	[B_PAWN_IDX] = 'P',
-	[B_KING_IDX] = 'K',
-	[B_QUEEN_IDX] = 'Q',
-	[B_ROOK_IDX] = 'R',
-	[B_BISHOP_IDX] = 'B',
-	[B_KNIGHT_IDX] = 'N'
+};
+
+const uint32_t PIECE_MATERIAL[] = {
+	[W_PAWN_IDX] = 1,
+	[W_KING_IDX] = 0,
+	[W_QUEEN_IDX] = 9,
+	[W_ROOK_IDX] = 5,
+	[W_BISHOP_IDX] = 3,
+	[W_KNIGHT_IDX] = 3,
 };
 
 bool board_is_piece_on(Board board, uint64_t pos) {
@@ -30,10 +33,22 @@ bool board_is_piece_type_on(Board board, uint64_t pos, PieceIndex idx) {
 	return board.pieces[idx] & pos;
 }
 
-void board_set_default(Board *board) {
+void board_reset(Board *board) {
 	for (PieceIndex i = 0; i < PIECE_COUNT; i++) {
 		board->pieces[i] = 0;
 	}
+}
+
+uint32_t board_get_white_material(Board board) {
+	return get_material(board.pieces);
+}
+
+uint32_t board_get_black_material(Board board) {
+	return get_material(board.pieces + 6);
+}
+
+void board_set_default(Board *board) {
+	board_reset(board);
 
 	// Set up white pawns
 	board->pieces[W_PAWN_IDX] |= 0x000000000000FF00ULL;
@@ -69,7 +84,14 @@ void board_print(Board board) {
 		for (PieceIndex piece_idx = 0; piece_idx < PIECE_COUNT; piece_idx++) {
 			if (board_is_piece_type_on(board, pos, piece_idx)) {
 				found_piece = true;
-				char ch = PIECE_CHARS[piece_idx];
+
+				char ch;
+				if (piece_idx >= 6) {
+					ch = PIECE_CHARS[piece_idx - 6];
+				} else {
+					ch = PIECE_CHARS[piece_idx];
+				}
+
 				printf(" %c ", ch);
 				break;
 			}
@@ -87,4 +109,20 @@ void board_print(Board board) {
 
 uint64_t convert_pos(uint64_t x, uint64_t y) {
 	return x * 8 + y;
+}
+
+uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]) {
+	uint32_t material = 0;
+
+	for (uint64_t i = 0; i < 64; i++) {
+		uint64_t pos = 1ULL << i;
+
+		for (PieceIndex idx = 0; idx < PIECE_COUNT / 2; idx++) {
+			if (pieces[idx] & pos) {
+				material += PIECE_MATERIAL[idx];
+			}
+		}
+	}
+
+	return material;
 }
