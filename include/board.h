@@ -1,19 +1,24 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include "result.h"
 #include <stdbool.h>
 #include <stdint.h>
 
-#define PIECE_COUNT 6
+#define PIECE_COUNT 12
 
 typedef enum PieceIndex {
-	PAWN_IDX,
-	KING_IDX,
-	QUEEN_IDX,
-	ROOK_IDX,
-	BISHOP_IDX,
-	KNIGHT_IDX,
+	W_PAWN_IDX,
+	W_KING_IDX,
+	W_QUEEN_IDX,
+	W_ROOK_IDX,
+	W_BISHOP_IDX,
+	W_KNIGHT_IDX,
+	B_PAWN_IDX,
+	B_KING_IDX,
+	B_QUEEN_IDX,
+	B_ROOK_IDX,
+	B_BISHOP_IDX,
+	B_KNIGHT_IDX,
 } PieceIndex;
 
 #define EMPTY_CHAR '.'
