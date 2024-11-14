@@ -128,10 +128,42 @@ uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]) {
 }
 
 uint64_t generate_bishop_pattern(uint64_t pos) {
-	uint64_t positions = 0;
+	uint64_t positions = 0b1;
 	for (int x = -1; x < 1; x += 2) {
 		for (int y = -1; y < 1; y += 2) {
 		}
 	}
 	return positions;
+}
+
+uint64_t generate_rook_pattern(uint64_t position) {
+	uint64_t moves = 0ULL;
+	int row = position / 8;
+	int col = position % 8;
+
+	// Horizontal moves: Left side (up to, but not including the left edge)
+	for (int i = col - 1; i > 0; i--) {
+		int target = row * 8 + i;
+		moves |= (1ULL << target);
+	}
+
+	// Horizontal moves: Right side (up to, but not including the right edge)
+	for (int i = col + 1; i < 7; i++) {
+		int target = row * 8 + i;
+		moves |= (1ULL << target);
+	}
+
+	// Vertical moves: Upwards (up to, but not including the top edge)
+	for (int i = row - 1; i > 0; i--) {
+		int target = i * 8 + col;
+		moves |= (1ULL << target);
+	}
+
+	// Vertical moves: Downwards (up to, but not including the bottom edge)
+	for (int i = row + 1; i < 7; i++) {
+		int target = i * 8 + col;
+		moves |= (1ULL << target);
+	}
+
+	return moves;
 }

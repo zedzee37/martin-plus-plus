@@ -9,8 +9,8 @@ typedef struct MagicCell {
 	uint64_t magic_number;
 } MagicCell;
 
-extern MagicCell rook_table[64];
-extern MagicCell bishop_table[64];
+extern MagicCell *rook_table[64];
+extern MagicCell *bishop_table[64];
 extern uint64_t rook_attacks[8196];
 extern uint64_t bishop_attacks[2048];
 
