@@ -33,6 +33,7 @@ typedef struct Board {
 
 extern bool board_is_piece_on(Board board, uint64_t pos);
 extern bool board_is_piece_type_on(Board board, uint64_t pos, PieceIndex idx);
+extern uint64_t board_get_attackers(Board board, uint64_t pos);
 extern uint32_t board_get_white_material(Board board);
 extern uint32_t board_get_black_material(Board board);
 extern bool board_is_white_checkmated(Board board);
@@ -42,5 +43,10 @@ extern void board_set_default(Board *board);
 
 extern uint64_t convert_pos(uint64_t x, uint64_t y);
 extern uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]);
+extern uint64_t generate_bishop_pattern(uint64_t pos);
+extern uint64_t generate_rook_pattern(uint64_t pos);
+extern uint64_t generate_knight_pattern(uint64_t pos);
+extern uint64_t generate_pawn_pattern(uint64_t pos);
+extern uint64_t generate_king_pattern(uint64_t pos);
 
 #endif

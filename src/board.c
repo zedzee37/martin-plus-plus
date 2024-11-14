@@ -44,7 +44,7 @@ uint32_t board_get_white_material(Board board) {
 }
 
 uint32_t board_get_black_material(Board board) {
-	return get_material(board.pieces + 6);
+	return get_material(board.pieces + PIECE_COUNT / 2);
 }
 
 void board_set_default(Board *board) {
@@ -125,4 +125,13 @@ uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]) {
 	}
 
 	return material;
+}
+
+uint64_t generate_bishop_pattern(uint64_t pos) {
+	uint64_t positions = 0;
+	for (int x = -1; x < 1; x += 2) {
+		for (int y = -1; y < 1; y += 2) {
+		}
+	}
+	return positions;
 }
