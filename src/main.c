@@ -8,8 +8,8 @@ int main() {
 	board_print(board);
 	printf("\nwhite: %d, black: %d\n", board_get_white_material(board), board_get_black_material(board));
 
-	for (int i = 0; i < 64; i++) {
-		uint64_t rook_pattern = generate_rook_pattern(1ULL >> i);
+	for (int j = 0; j < 64; j++) {
+		uint64_t rook_pattern = generate_rook_pattern(1ULL << j);
 		for (int i = 0; i < 64; i++) {
 			uint64_t pos = 1ULL << i;
 

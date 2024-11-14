@@ -138,31 +138,39 @@ uint64_t generate_bishop_pattern(uint64_t pos) {
 
 uint64_t generate_rook_pattern(uint64_t position) {
 	uint64_t moves = 0ULL;
-	int row = position / 8;
-	int col = position % 8;
 
-	// Horizontal moves: Left side (up to, but not including the left edge)
-	for (int i = col - 1; i > 0; i--) {
-		int target = row * 8 + i;
-		moves |= (1ULL << target);
-	}
+	bool right_done = false;
+	bool left_done = false;
+	bool up_done = false;
+	bool down_done = false;
+	for (int i = 1; i <= 6; i++) {
+		// right
+		if (!right_done && !(position << (i - 1) & 0x8080808080808080ULL)) {
+			moves |= position << i;
+		} else {
+			right_done = true;
+		}
 
-	// Horizontal moves: Right side (up to, but not including the right edge)
-	for (int i = col + 1; i < 7; i++) {
-		int target = row * 8 + i;
-		moves |= (1ULL << target);
-	}
+		// left
+		if (!left_done && !(position >> (i - 1) & 0x0101010101010101ULL)) {
+			moves |= position >> i;
+		} else {
+			left_done = true;
+		}
 
-	// Vertical moves: Upwards (up to, but not including the top edge)
-	for (int i = row - 1; i > 0; i--) {
-		int target = i * 8 + col;
-		moves |= (1ULL << target);
-	}
+		// down
+		if (!down_done && !(position << ((i - 1) * 8) & 0xFF00000000000000ULL)) {
+			moves |= position << (i * 8);
+		} else {
+			down_done = true;
+		}
 
-	// Vertical moves: Downwards (up to, but not including the bottom edge)
-	for (int i = row + 1; i < 7; i++) {
-		int target = i * 8 + col;
-		moves |= (1ULL << target);
+		// up
+		if (!up_done && !(position >> ((i - 1) * 8) & 0xFF)) {
+			moves |= position >> (i * 8);
+		} else {
+			up_done = true;
+		}
 	}
 
 	return moves;
