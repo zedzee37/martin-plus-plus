@@ -2,6 +2,7 @@ project('martin-plus-plus', 'c')
 
 src_files = files(
   'src/board.c',
+  'src/magic_bit_board.c',
   'src/main.c',
 )
 
