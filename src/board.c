@@ -127,51 +127,6 @@ uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]) {
 	return material;
 }
 
-uint64_t generate_bishop_pattern(uint64_t pos) {
-	uint64_t positions = 0b1;
-	for (int x = -1; x < 1; x += 2) {
-		for (int y = -1; y < 1; y += 2) {
-		}
-	}
-	return positions;
-}
-
-uint64_t generate_rook_pattern(uint64_t position) {
-	uint64_t moves = 0ULL;
-
-	bool right_done = false;
-	bool left_done = false;
-	bool up_done = false;
-	bool down_done = false;
-	for (int i = 1; i <= 6; i++) {
-		// right
-		if (!right_done && !(position << (i - 1) & 0x8080808080808080ULL)) {
-			moves |= position << i;
-		} else {
-			right_done = true;
-		}
-
-		// left
-		if (!left_done && !(position >> (i - 1) & 0x0101010101010101ULL)) {
-			moves |= position >> i;
-		} else {
-			left_done = true;
-		}
-
-		// down
-		if (!down_done && !(position << ((i - 1) * 8) & 0xFF00000000000000ULL)) {
-			moves |= position << (i * 8);
-		} else {
-			down_done = true;
-		}
-
-		// up
-		if (!up_done && !(position >> ((i - 1) * 8) & 0xFF)) {
-			moves |= position >> (i * 8);
-		} else {
-			up_done = true;
-		}
-	}
-
-	return moves;
+bool is_on_edge(uint64_t pos) {
+	return (pos & 0xFF) || (pos & 0xFF00000000000000ULL) || (pos & 0x0101010101010101ULL) || (pos & 0x8080808080808080ULL);
 }

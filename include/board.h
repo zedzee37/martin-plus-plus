@@ -43,10 +43,6 @@ extern void board_set_default(Board *board);
 
 extern uint64_t convert_pos(uint64_t x, uint64_t y);
 extern uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]);
-extern uint64_t generate_bishop_pattern(uint64_t pos);
-extern uint64_t generate_rook_pattern(uint64_t pos);
-extern uint64_t generate_knight_pattern(uint64_t pos);
-extern uint64_t generate_pawn_pattern(uint64_t pos);
-extern uint64_t generate_king_pattern(uint64_t pos);
+extern bool is_on_edge(uint64_t pos);
 
 #endif

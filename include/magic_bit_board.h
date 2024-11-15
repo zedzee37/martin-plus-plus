@@ -18,4 +18,7 @@ extern uint64_t get_rook_attacks(uint64_t pos, uint64_t blockers);
 extern uint64_t get_bishop_attacks(uint64_t pos, uint64_t blockers);
 extern uint64_t get_magic_index(MagicCell cell, uint64_t blockers);
 
+extern uint64_t generate_rook_pattern(uint64_t pos);
+extern uint64_t generate_bishop_pattern(uint64_t pos);
+
 #endif
