@@ -25,29 +25,25 @@ uint64_t generate_rook_pattern(uint64_t position) {
 	bool up_done = false;
 	bool down_done = false;
 	for (int i = 1; i <= 6; i++) {
-		// right
-		if (!right_done && !is_on_edge(position << (i - 1))) {
+		if (!right_done && !IS_ON_RIGHT_EDGE(position << i)) {
 			moves |= position << i;
 		} else {
 			right_done = true;
 		}
 
-		// left
-		if (!left_done && !is_on_edge(position >> (i - 1))) {
+		if (!left_done && !IS_ON_LEFT_EDGE(position >> i)) {
 			moves |= position >> i;
 		} else {
 			left_done = true;
 		}
 
-		// down
-		if (!down_done && !is_on_edge(position << ((i - 1) * 8))) {
+		if (!down_done && !IS_ON_BOTTOM_EDGE(position << (i * 8))) {
 			moves |= position << (i * 8);
 		} else {
 			down_done = true;
 		}
 
-		// up
-		if (!up_done && !is_on_edge(position >> ((i - 1) * 8))) {
+		if (!up_done && !IS_ON_TOP_EDGE(position >> (i * 8))) {
 			moves |= position >> (i * 8);
 		} else {
 			up_done = true;

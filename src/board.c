@@ -126,7 +126,3 @@ uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]) {
 
 	return material;
 }
-
-bool is_on_edge(uint64_t pos) {
-	return (pos & 0xFF) || (pos & 0xFF00000000000000ULL) || (pos & 0x0101010101010101ULL) || (pos & 0x8080808080808080ULL);
-}
