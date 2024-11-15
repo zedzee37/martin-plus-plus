@@ -1,11 +1,20 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #define IS_ON_RIGHT_EDGE(pos) ((pos) & 0x8080808080808080ULL)
 #define IS_ON_LEFT_EDGE(pos) ((pos) & 0x0101010101010101ULL)
 #define IS_ON_TOP_EDGE(pos) ((pos) & 0xFF)
 #define IS_ON_BOTTOM_EDGE(pos) ((pos) & 0xFF00000000000000)
 #define IS_ON_EDGE(pos) (IS_ON_RIGHT_EDGE(pos) || IS_ON_LEFT_EDGE(pos) || IS_ON_TOP_EDGE(pos) || IS_ON_BOTTOM_EDGE(pos))
+
+uint64_t *rook_moves[8196] = { NULL };
+uint64_t *bishop_attacks[2048] = { NULL };
+
+typedef struct MagicCell {
+	uint64_t blocker_mask;
+	uint64_t magic_number;
+} MagicCell;
 
 uint64_t generate_bishop_pattern(uint64_t pos) {
 	uint64_t moves = 0;
@@ -77,6 +86,29 @@ uint64_t generate_rook_pattern(uint64_t position) {
 	}
 
 	return moves;
+}
+
+uint64_t rand64() {
+	uint32_t left = rand();
+	uint32_t right = rand();
+	return ((uint64_t)left << 32) | right;
+}
+
+bool is_magic_valid(uint64_t magic, uint64_t pos, uint64_t mask) {
+}
+
+MagicCell find_magic(uint64_t pos, uint64_t mask) {
+	while (true) {
+		uint64_t magic = rand64() & rand64() & rand64();
+	}
+}
+
+MagicCell find_rook_magic(uint64_t pos) {
+	return find_magic(pos, generate_rook_pattern(pos));
+}
+
+MagicCell find_bishop_magic(uint64_t pos) {
+	return find_magic(pos, generate_bishop_pattern(pos));
 }
 
 int main() {
