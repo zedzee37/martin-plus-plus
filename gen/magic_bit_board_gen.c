@@ -17,6 +17,9 @@ typedef struct MagicCell {
 	uint64_t magic_number;
 } MagicCell;
 
+MagicCell rook_magics[64];
+MagicCell bishop_magics[64];
+
 uint64_t generate_bishop_pattern(uint64_t pos, uint64_t blockers) {
 	uint64_t moves = 0;
 
@@ -127,21 +130,112 @@ uint64_t rand64() {
 	return ((uint64_t)left << 32) | right;
 }
 
-bool is_magic_valid(uint64_t magic, uint64_t pos, uint64_t mask) {
+uint64_t magic_index(MagicCell magic_cell, uint64_t blockers) {
+	blockers &= magic_cell.blocker_mask;
+
+	// Calculate the index using the magic number and bit shift
+	uint64_t shift = 64 - __builtin_popcountll(magic_cell.blocker_mask);
+	return (blockers * magic_cell.magic_number) >> shift;
 }
 
-MagicCell find_magic(uint64_t pos, uint64_t mask) {
-	while (true) {
-		uint64_t magic = rand64() & rand64() & rand64();
+bool is_magic_valid_rook(uint64_t magic, uint64_t pos, uint64_t mask) {
+	int blocker_count;
+	uint64_t *blockers = generate_blocker_configs(mask, &blocker_count);
+
+	// Array to hold computed attack bitboards for validation
+	uint64_t *used_attacks = calloc(blocker_count, sizeof(uint64_t));
+	if (!used_attacks) {
+		free(blockers);
+		exit(EXIT_FAILURE);
 	}
+
+	uint64_t shift = 64 - __builtin_popcountll(mask); // Calculate the shift for magic indexing
+	for (int i = 0; i < blocker_count; i++) {
+		uint64_t blockers_config = blockers[i];
+		// if (blockers_config == 0) {
+		// 	continue;
+		// }
+		uint64_t attack = generate_rook_pattern(pos, blockers_config); // Change to `generate_bishop_pattern` for bishops
+		uint64_t index = (blockers_config * magic) >> shift;
+
+		if (used_attacks[index] == 0) {
+			used_attacks[index] = attack;
+		} else if (used_attacks[index] != attack) {
+			// Conflict found
+			free(blockers);
+			free(used_attacks);
+			return false;
+		}
+	}
+
+	free(blockers);
+	free(used_attacks);
+	return true;
+}
+
+bool is_magic_valid_bishop(uint64_t magic, uint64_t pos, uint64_t mask) {
+	int blocker_count;
+	uint64_t *blockers = generate_blocker_configs(mask, &blocker_count);
+
+	// Array to hold computed attack bitboards for validation
+	uint64_t *used_attacks = calloc(blocker_count, sizeof(uint64_t));
+	if (!used_attacks) {
+		free(blockers);
+		exit(EXIT_FAILURE);
+	}
+
+	uint64_t shift = 64 - __builtin_popcountll(mask); // Calculate the shift for magic indexing
+	for (int i = 0; i < blocker_count; i++) {
+		uint64_t blockers_config = blockers[i];
+		uint64_t attack = generate_rook_pattern(pos, blockers_config); // Change to `generate_bishop_pattern` for bishops
+		uint64_t index = (blockers_config * magic) >> shift;
+
+		if (used_attacks[index] == 0) {
+			used_attacks[index] = attack;
+		} else if (used_attacks[index] != attack) {
+			// Conflict found
+			free(blockers);
+			free(used_attacks);
+			return false;
+		}
+	}
+
+	free(blockers);
+	free(used_attacks);
+	return true;
 }
 
 MagicCell find_rook_magic(uint64_t pos) {
-	return find_magic(pos, generate_rook_pattern(pos, 0));
+	MagicCell result;
+	result.blocker_mask = generate_rook_pattern(pos, 0);
+
+	if (result.blocker_mask == 0) {
+		result.magic_number = 0;
+		return result;
+	}
+
+	// Attempt to find a valid magic number
+	while (true) {
+		uint64_t magic = rand64() & rand64() & rand64(); // Generate a random 64-bit magic number
+		if (is_magic_valid_rook(magic, pos, result.blocker_mask)) {
+			result.magic_number = magic;
+			return result;
+		}
+	}
 }
 
 MagicCell find_bishop_magic(uint64_t pos) {
-	return find_magic(pos, generate_bishop_pattern(pos, 0));
+	MagicCell result;
+	result.blocker_mask = generate_bishop_pattern(pos, 0);
+
+	// Attempt to find a valid magic number
+	while (true) {
+		uint64_t magic = rand64() & rand64() & rand64(); // Generate a random 64-bit magic number
+		if (is_magic_valid_bishop(magic, pos, result.blocker_mask)) {
+			result.magic_number = magic;
+			return result;
+		}
+	}
 }
 
 void print_board(uint64_t board) {
@@ -153,7 +247,6 @@ void print_board(uint64_t board) {
 		} else {
 			printf(" . ");
 		}
-
 		if ((i + 1) % 8 == 0) {
 			printf("\n");
 		}
@@ -161,16 +254,22 @@ void print_board(uint64_t board) {
 	printf("\n");
 }
 
-int main() {
-	uint64_t pos = 1ULL << 43;
-
-	uint64_t mask = generate_rook_pattern(pos, 0);
-	int amt;
-	uint64_t *configs = generate_blocker_configs(mask, &amt);
-
-	for (int j = 0; j < amt; j++) {
-		print_board(configs[j]);
+void generate_rook_magics() {
+	for (int i = 0; i < 64; i++) {
+		uint64_t pos = 1ULL << i;
+		rook_magics[i] = find_rook_magic(pos);
+		printf("Found magic for: %d\n", i);
 	}
+}
 
-	free(configs);
+void generate_bishop_magics() {
+	for (int i = 0; i < 64; i++) {
+		uint64_t pos = 1ULL << i;
+		bishop_magics[i] = find_bishop_magic(pos);
+	}
+}
+
+int main() {
+	generate_rook_magics();
+	return 0;
 }
