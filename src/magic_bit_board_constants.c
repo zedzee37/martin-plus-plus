@@ -11,7 +11,34 @@ uint64_t bishop_attacks[2048] = { 0 };
 uint64_t generate_bishop_pattern(uint64_t pos) {
 	uint64_t moves = 0;
 
-	for (int i = 0; i <= 6; i++) {
+	bool top_right = IS_ON_RIGHT_EDGE(pos) || IS_ON_TOP_EDGE(pos);
+	bool top_left = IS_ON_LEFT_EDGE(pos) || IS_ON_TOP_EDGE(pos);
+	bool bottom_right = IS_ON_RIGHT_EDGE(pos) || IS_ON_BOTTOM_EDGE(pos);
+	bool bottom_left = IS_ON_LEFT_EDGE(pos) || IS_ON_BOTTOM_EDGE(pos);
+	for (int i = 1; i <= 6; i++) {
+		if (!top_right && !(IS_ON_RIGHT_EDGE(pos >> (i * 7)) || IS_ON_TOP_EDGE(pos >> (i * 7)))) {
+			moves |= pos >> (i * 7);
+		} else {
+			top_right = true;
+		}
+
+		if (!top_left && !(IS_ON_LEFT_EDGE(pos >> (i * 9)) || IS_ON_TOP_EDGE(pos >> (i * 9)))) {
+			moves |= pos >> (i * 9);
+		} else {
+			top_left = true;
+		}
+
+		if (!bottom_right && !(IS_ON_RIGHT_EDGE(pos << (i * 9)) || IS_ON_BOTTOM_EDGE(pos << (i * 9)))) {
+			moves |= pos << (i * 9);
+		} else {
+			bottom_right = true;
+		}
+
+		if (!bottom_left && !(IS_ON_LEFT_EDGE(pos << (i * 7)) || IS_ON_BOTTOM_EDGE(pos << (i * 7)))) {
+			moves |= pos << (i * 7);
+		} else {
+			bottom_left = true;
+		}
 	}
 
 	return moves;
