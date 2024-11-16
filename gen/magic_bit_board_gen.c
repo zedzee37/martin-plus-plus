@@ -59,10 +59,10 @@ uint64_t generate_bishop_pattern(uint64_t pos, uint64_t blockers) {
 uint64_t generate_rook_pattern(uint64_t position, uint64_t blockers) {
 	uint64_t moves = 0ULL;
 
-	bool right_done = false;
-	bool left_done = false;
-	bool up_done = false;
-	bool down_done = false;
+	bool right_done = IS_ON_RIGHT_EDGE(position);
+	bool left_done = IS_ON_LEFT_EDGE(position);
+	bool up_done = IS_ON_TOP_EDGE(position);
+	bool down_done = IS_ON_BOTTOM_EDGE(position);
 	for (int i = 1; i <= 6; i++) {
 		if (!right_done && !IS_ON_RIGHT_EDGE(position << i) && !((position << i) & blockers)) {
 			moves |= position << i;
@@ -187,7 +187,7 @@ bool is_magic_valid_bishop(uint64_t magic, uint64_t pos, uint64_t mask) {
 	uint64_t shift = 64 - __builtin_popcountll(mask); // Calculate the shift for magic indexing
 	for (int i = 0; i < blocker_count; i++) {
 		uint64_t blockers_config = blockers[i];
-		uint64_t attack = generate_rook_pattern(pos, blockers_config); // Change to `generate_bishop_pattern` for bishops
+		uint64_t attack = generate_bishop_pattern(pos, blockers_config); // Change to `generate_bishop_pattern` for bishops
 		uint64_t index = (blockers_config * magic) >> shift;
 
 		if (used_attacks[index] == 0) {
@@ -208,11 +208,6 @@ bool is_magic_valid_bishop(uint64_t magic, uint64_t pos, uint64_t mask) {
 MagicCell find_rook_magic(uint64_t pos) {
 	MagicCell result;
 	result.blocker_mask = generate_rook_pattern(pos, 0);
-
-	if (result.blocker_mask == 0) {
-		result.magic_number = 0;
-		return result;
-	}
 
 	// Attempt to find a valid magic number
 	while (true) {
@@ -258,7 +253,7 @@ void generate_rook_magics() {
 	for (int i = 0; i < 64; i++) {
 		uint64_t pos = 1ULL << i;
 		rook_magics[i] = find_rook_magic(pos);
-		printf("Found magic for: %d\n", i);
+		printf("Found magic (rook) for: %d\n", i);
 	}
 }
 
@@ -266,10 +261,30 @@ void generate_bishop_magics() {
 	for (int i = 0; i < 64; i++) {
 		uint64_t pos = 1ULL << i;
 		bishop_magics[i] = find_bishop_magic(pos);
+		printf("Found magic (bishop) for: %d\n", i);
 	}
+}
+
+void dump_to_file(const char *file_path, MagicCell *magics) {
+	FILE *file_handle = fopen(file_path, "w");
+
+	if (!file_handle) {
+		printf("Error opening file: %s!\n", file_path);
+		exit(EXIT_FAILURE);
+	}
+
+	for (int i = 0; i < 64; i++) {
+		uint64_t magic = magics[i].magic_number;
+		fprintf(file_handle, "%lX\n", magic);
+	}
+
+	fclose(file_handle);
 }
 
 int main() {
 	generate_rook_magics();
+	dump_to_file("rook_magics.txt", rook_magics);
+	generate_bishop_magics();
+	dump_to_file("bishop_magics.txt", bishop_magics);
 	return 0;
 }
