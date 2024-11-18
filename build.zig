@@ -14,6 +14,8 @@ pub fn build(b: *std.Build) void {
 
     b.installArtifact(exe);
 
+    const board_module = b.addModule("board", .{ .root_source_file = b.path("src/board/root.zig") });
+
     const run_cmd = b.addRunArtifact(exe);
 
     run_cmd.step.dependOn(b.getInstallStep());
@@ -31,6 +33,8 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    exe.root_module.addImport("board", board_module);
+    exe_unit_tests.root_module.addImport("board", board_module);
     const run_exe_unit_tests = b.addRunArtifact(exe_unit_tests);
 
     const test_step = b.step("test", "Run unit tests");
