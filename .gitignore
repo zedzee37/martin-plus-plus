@@ -33,3 +33,6 @@
 
 build
 .cache
+
+.zig-cache
+zig-out
