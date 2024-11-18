@@ -2,9 +2,8 @@ project('martin-plus-plus', 'c')
 
 src_files = files(
   'src/board.c',
-  'src/magic_bit_board.c',
-  'src/magic_bit_board_constants.c',
   'src/main.c',
+  'src/square.c',
 )
 
 include_dirs = include_directories('include')
