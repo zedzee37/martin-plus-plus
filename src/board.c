@@ -1,4 +1,5 @@
 #include "board.h"
+#include "square.h"
 #include <stdint.h>
 #include <stdio.h>
 
@@ -20,31 +21,10 @@ const uint32_t PIECE_MATERIAL[] = {
 	[W_KNIGHT_IDX] = 3,
 };
 
-bool board_is_piece_on(Board board, uint64_t pos) {
-	for (int i = 0; i < PIECE_COUNT; i++) {
-		if (board.pieces[i] & pos) {
-			return true;
-		}
-	}
-	return false;
-}
-
-bool board_is_piece_type_on(Board board, uint64_t pos, PieceIndex idx) {
-	return board.pieces[idx] & pos;
-}
-
-void board_reset(Board *board) {
-	for (PieceIndex i = 0; i < PIECE_COUNT; i++) {
-		board->pieces[i] = 0;
-	}
-}
-
-uint32_t board_get_white_material(Board board) {
-	return get_material(board.pieces);
-}
-
-uint32_t board_get_black_material(Board board) {
-	return get_material(board.pieces + PIECE_COUNT / 2);
+Board board_init() {
+	Board board;
+	board_reset(&board);
+	return board;
 }
 
 void board_set_default(Board *board) {
@@ -76,6 +56,33 @@ void board_set_default(Board *board) {
 	board->pieces[B_KNIGHT_IDX] |= 0x4200000000000000ULL; // Black knights at B8 and G8
 }
 
+void board_reset(Board *board) {
+	for (PieceIndex i = 0; i < PIECE_COUNT; i++) {
+		board->pieces[i] = 0;
+	}
+}
+
+bool board_is_piece_on(Board board, uint64_t pos) {
+	for (int i = 0; i < PIECE_COUNT; i++) {
+		if (board.pieces[i] & pos) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool board_is_piece_type_on(Board board, uint64_t pos, PieceIndex idx) {
+	return board.pieces[idx] & pos;
+}
+
+uint32_t board_get_white_material(Board board) {
+	return get_material(board.pieces);
+}
+
+uint32_t board_get_black_material(Board board) {
+	return get_material(board.pieces + PIECE_COUNT / 2);
+}
+
 void board_print(Board board) {
 	for (uint64_t i = 0; i < 64; i++) {
 		uint64_t pos = 1ULL << i;
@@ -105,10 +112,6 @@ void board_print(Board board) {
 			printf("\n");
 		}
 	}
-}
-
-uint64_t convert_pos(uint64_t x, uint64_t y) {
-	return x * 8 + y;
 }
 
 uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]) {
