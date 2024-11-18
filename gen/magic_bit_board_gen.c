@@ -9,8 +9,8 @@
 #define IS_ON_BOTTOM_EDGE(pos) ((pos) & 0xFF00000000000000)
 #define IS_ON_EDGE(pos) (IS_ON_RIGHT_EDGE(pos) || IS_ON_LEFT_EDGE(pos) || IS_ON_TOP_EDGE(pos) || IS_ON_BOTTOM_EDGE(pos))
 
-uint64_t *rook_moves[8196] = { NULL };
-uint64_t *bishop_attacks[2048] = { NULL };
+uint64_t rook_attacks[8196] = { 0 };
+uint64_t bishop_attacks[2048] = { 0 };
 
 typedef struct MagicCell {
 	uint64_t blocker_mask;
@@ -265,6 +265,81 @@ void generate_bishop_magics() {
 	}
 }
 
+void generate_rook_attacks() {
+	for (int i = 0; i < 64; i++) {
+		uint64_t pos = 1ULL << i;
+		uint64_t mask = generate_rook_pattern(pos, 0);
+		MagicCell magic = rook_magics[i];
+		int blocker_count;
+		uint64_t *blockers = generate_blocker_configs(mask, &blocker_count);
+
+		for (int j = 0; j < blocker_count; j++) {
+			uint64_t blocker = blockers[j];
+			uint64_t idx = magic_index(magic, blocker);
+
+			rook_attacks[idx] = generate_rook_pattern(pos, blocker);
+		}
+	}
+}
+
+void generate_bishop_attacks() {
+	for (int i = 0; i < 64; i++) {
+		uint64_t pos = 1ULL << i;
+		uint64_t mask = generate_bishop_pattern(pos, 0);
+		MagicCell magic = bishop_magics[i];
+		int blocker_count;
+		uint64_t *blockers = generate_blocker_configs(mask, &blocker_count);
+
+		for (int j = 0; j < blocker_count; j++) {
+			uint64_t blocker = blockers[j];
+			uint64_t idx = magic_index(magic, blocker);
+
+			bishop_attacks[idx] = generate_bishop_pattern(pos, blocker);
+		}
+	}
+}
+
+void generate_file(const char *file_path) {
+	FILE *file_handle = fopen(file_path, "w");
+
+	if (!file_handle) {
+		printf("Error opening file: %s!\n", file_path);
+		exit(EXIT_FAILURE);
+	}
+
+	fprintf(file_handle, "MagicCell rook_table[64] = {\n");
+	for (int i = 0; i < 64; i++) {
+		MagicCell rook_magic = rook_magics[i];
+
+		fprintf(file_handle, "\t{0x%lX, 0x%lX},\n", rook_magic.blocker_mask, rook_magic.magic_number);
+	}
+	fprintf(file_handle, "};\n");
+
+	fprintf(file_handle, "\nMagicCell bishop_table[64] = {\n");
+	for (int i = 0; i < 64; i++) {
+		MagicCell bishop_magic = bishop_magics[i];
+
+		fprintf(file_handle, "\t{0x%lX, 0x%lX},\n", bishop_magic.blocker_mask, bishop_magic.magic_number);
+	}
+	fprintf(file_handle, "};\n");
+
+	fprintf(file_handle, "\nuint64_t rook_attacks[8196] = {\n");
+	for (int i = 0; i < 8192; i++) {
+		uint64_t attack = rook_attacks[i];
+
+		fprintf(file_handle, "\t0x%lX,\n", attack);
+	}
+	fprintf(file_handle, "};\n");
+
+	fprintf(file_handle, "\nuint64_t bishop_attacks[2048] = {\n");
+	for (int i = 0; i < 2048; i++) {
+		uint64_t attack = bishop_attacks[i];
+
+		fprintf(file_handle, "\t0x%lX,\n", attack);
+	}
+	fprintf(file_handle, "};\n");
+}
+
 void dump_to_file(const char *file_path, MagicCell *magics) {
 	FILE *file_handle = fopen(file_path, "w");
 
@@ -283,8 +358,9 @@ void dump_to_file(const char *file_path, MagicCell *magics) {
 
 int main() {
 	generate_rook_magics();
-	dump_to_file("rook_magics.txt", rook_magics);
 	generate_bishop_magics();
-	dump_to_file("bishop_magics.txt", bishop_magics);
+	generate_rook_attacks();
+	generate_bishop_attacks();
+	generate_file("gen.h");
 	return 0;
 }
