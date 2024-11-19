@@ -2,27 +2,18 @@
 #include <stdint.h>
 #include <stdio.h>
 
-const char PIECE_CHARS[] = {
-	[W_PAWN_IDX] = 'P',
-	[W_KING_IDX] = 'K',
-	[W_QUEEN_IDX] = 'Q',
-	[W_ROOK_IDX] = 'R',
-	[W_BISHOP_IDX] = 'B',
-	[W_KNIGHT_IDX] = 'N',
-};
-
-const uint32_t PIECE_MATERIAL[] = {
-	[W_PAWN_IDX] = 1,
-	[W_KING_IDX] = 0,
-	[W_QUEEN_IDX] = 9,
-	[W_ROOK_IDX] = 5,
-	[W_BISHOP_IDX] = 3,
-	[W_KNIGHT_IDX] = 3,
+const PieceInfo PIECE_INFO[] = {
+	[W_PAWN_IDX] = { 'P', 1 },
+	[W_KING_IDX] = { 'K', 0 },
+	[W_QUEEN_IDX] = { 'Q', 9 },
+	[W_ROOK_IDX] = { 'R', 5 },
+	[W_BISHOP_IDX] = { 'B', 3 },
+	[W_KNIGHT_IDX] = { 'N', 3 }
 };
 
 Board board_init() {
 	Board board;
-	board_reset(&board);
+	board_set_default(&board);
 	return board;
 }
 
@@ -91,12 +82,7 @@ void board_print(Board board) {
 			if (board_is_piece_type_on(board, pos, piece_idx)) {
 				found_piece = true;
 
-				char ch;
-				if (piece_idx >= 6) {
-					ch = PIECE_CHARS[piece_idx - 6];
-				} else {
-					ch = PIECE_CHARS[piece_idx];
-				}
+				char ch = get_piece_info(piece_idx).debug_char;
 
 				printf(" %c ", ch);
 				break;
@@ -121,10 +107,38 @@ uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]) {
 
 		for (PieceIndex idx = 0; idx < PIECE_COUNT / 2; idx++) {
 			if (pieces[idx] & pos) {
-				material += PIECE_MATERIAL[idx];
+				material += get_piece_info(idx).material;
 			}
 		}
 	}
 
 	return material;
+}
+
+PieceInfo get_piece_info(PieceIndex idx) {
+	return PIECE_INFO[clamp_piece_idx(idx)];
+}
+
+uint32_t clamp_piece_idx(PieceIndex piece_idx) {
+}
+
+uint64_t get_piece_attack_pattern(uint64_t pos, PieceIndex piece_type) {
+	uint64_t attack = 0;
+
+	switch (clamp_piece_idx(piece_type)) {
+		case W_PAWN_IDX:
+			break;
+		case W_KING_IDX:
+			break;
+		case W_QUEEN_IDX:
+			break;
+		case W_BISHOP_IDX:
+			break;
+		case W_ROOK_IDX:
+			break;
+		case W_KNIGHT_IDX:
+			break;
+	}
+
+	return attack;
 }

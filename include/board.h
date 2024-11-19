@@ -12,6 +12,13 @@
 #define IS_ON_BOTTOM_EDGE(pos) ((pos) & 0xFF00000000000000)
 #define IS_ON_EDGE(pos) (IS_ON_RIGHT_EDGE(pos) || IS_ON_LEFT_EDGE(pos) || IS_ON_TOP_EDGE(pos) || IS_ON_BOTTOM_EDGE(pos))
 
+typedef struct PieceInfo {
+	char debug_char;
+	uint32_t material;
+} PieceInfo;
+
+extern const PieceInfo PIECE_INFO[];
+
 typedef enum PieceIndex {
 	W_PAWN_IDX,
 	W_KING_IDX,
@@ -29,10 +36,6 @@ typedef enum PieceIndex {
 
 #define EMPTY_CHAR '.'
 
-// Define the characters for each piece type
-extern const char PIECE_CHARS[];
-extern const uint32_t PIECE_MATERIAL[];
-
 typedef struct Board {
 	uint64_t pieces[PIECE_COUNT];
 } Board;
@@ -47,5 +50,8 @@ extern bool board_is_black_checkmated(Board board);
 extern void board_print(Board board);
 
 extern uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]);
+extern PieceInfo get_piece_info(PieceIndex idx);
+extern uint32_t clamp_piece_idx(PieceIndex piece_idx);
+extern uint64_t get_piece_attack_pattern(uint64_t pos, PieceIndex piece_type);
 
 #endif
