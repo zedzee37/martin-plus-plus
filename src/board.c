@@ -1,4 +1,6 @@
 #include "board.h"
+#include "attacks.h"
+#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -120,6 +122,10 @@ PieceInfo get_piece_info(PieceIndex idx) {
 }
 
 uint32_t clamp_piece_idx(PieceIndex piece_idx) {
+	if (piece_idx >= PIECE_COUNT / 2) {
+		return piece_idx - PIECE_COUNT / 2;
+	}
+	return piece_idx;
 }
 
 uint64_t get_piece_attack_pattern(uint64_t pos, PieceIndex piece_type) {
@@ -131,10 +137,13 @@ uint64_t get_piece_attack_pattern(uint64_t pos, PieceIndex piece_type) {
 		case W_KING_IDX:
 			break;
 		case W_QUEEN_IDX:
+			attack = orthagonal_slider_attack(pos, 0) | cardinal_slider_attack(pos, 0);
 			break;
 		case W_BISHOP_IDX:
+			attack = orthagonal_slider_attack(pos, 0);
 			break;
 		case W_ROOK_IDX:
+			attack = cardinal_slider_attack(pos, 0);
 			break;
 		case W_KNIGHT_IDX:
 			break;

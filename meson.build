@@ -1,6 +1,7 @@
 project('martin-plus-plus', 'c')
 
 src_files = files(
+  'src/attacks.c',
   'src/board.c',
   'src/main.c',
 )
