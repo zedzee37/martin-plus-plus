@@ -142,26 +142,22 @@ uint64_t board_get_piece_attack_pattern(Board board, uint64_t pos, PieceIndex pi
 			break;
 		case W_KING_IDX:
 			attack = orthagonal_slider_attack(pos, blockers, 1) | cardinal_slider_attack(pos, blockers, 1);
-			attack &= ~friendlies;
 			break;
 		case W_QUEEN_IDX:
 			attack = orthagonal_slider_attack(pos, blockers, 7) | cardinal_slider_attack(pos, blockers, 7);
-			attack &= ~friendlies;
 			break;
 		case W_BISHOP_IDX:
 			attack = orthagonal_slider_attack(pos, blockers, 7);
-			attack &= ~friendlies;
 			break;
 		case W_ROOK_IDX:
 			attack = cardinal_slider_attack(pos, blockers, 7);
-			attack &= ~friendlies;
 			break;
 		case W_KNIGHT_IDX:
 			attack = knight_attack(pos);
 			break;
 	}
 
-	return attack;
+	return attack & ~friendlies;
 }
 
 uint64_t board_get_friendly(Board board, bool is_black) {
