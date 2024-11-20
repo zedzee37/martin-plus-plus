@@ -133,6 +133,7 @@ uint64_t get_piece_attack_pattern(uint64_t pos, PieceIndex piece_type) {
 
 	switch (clamp_piece_idx(piece_type)) {
 		case W_PAWN_IDX:
+			// TODO: add en passant and check for pieces on attacking squares
 			attack = pawn_attack(pos, is_black);
 			break;
 		case W_KING_IDX:
