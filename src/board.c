@@ -138,7 +138,7 @@ uint64_t board_get_piece_attack_pattern(Board board, uint64_t pos, PieceIndex pi
 	switch (clamp_piece_idx(piece_type)) {
 		case W_PAWN_IDX:
 			// TODO: add en passant and check for pieces on attacking squares
-			attack = pawn_attack(pos, is_black);
+			attack = pawn_attack(pos, is_black, blockers);
 			break;
 		case W_KING_IDX:
 			attack = orthagonal_slider_attack(pos, blockers, 1) | cardinal_slider_attack(pos, blockers, 1);
