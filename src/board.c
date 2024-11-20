@@ -1,6 +1,5 @@
 #include "board.h"
 #include "attacks.h"
-#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -135,17 +134,19 @@ uint64_t get_piece_attack_pattern(uint64_t pos, PieceIndex piece_type) {
 		case W_PAWN_IDX:
 			break;
 		case W_KING_IDX:
+			attack = orthagonal_slider_attack(pos, 0, 1) | cardinal_slider_attack(pos, 0, 1);
 			break;
 		case W_QUEEN_IDX:
-			attack = orthagonal_slider_attack(pos, 0) | cardinal_slider_attack(pos, 0);
+			attack = orthagonal_slider_attack(pos, 0, 7) | cardinal_slider_attack(pos, 0, 7);
 			break;
 		case W_BISHOP_IDX:
-			attack = orthagonal_slider_attack(pos, 0);
+			attack = orthagonal_slider_attack(pos, 0, 7);
 			break;
 		case W_ROOK_IDX:
-			attack = cardinal_slider_attack(pos, 0);
+			attack = cardinal_slider_attack(pos, 0, 7);
 			break;
 		case W_KNIGHT_IDX:
+			attack = knight_attack(pos);
 			break;
 	}
 
