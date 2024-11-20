@@ -41,6 +41,8 @@ extern bool board_is_piece_type_on(Board board, uint64_t pos, PieceIndex idx);
 extern bool board_is_white_checkmated(Board board);
 extern bool board_is_black_checkmated(Board board);
 extern void board_print(Board board);
+extern uint64_t board_get_friendly(Board board, bool is_black);
+extern uint64_t board_get_enemy(Board board, bool is_black);
 
 extern uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]);
 extern PieceInfo get_piece_info(PieceIndex idx);

@@ -1,5 +1,6 @@
 #include "board.h"
 #include "attacks.h"
+#include "helpers.h"
 #include <stdint.h>
 #include <stdio.h>
 
@@ -154,4 +155,36 @@ uint64_t get_piece_attack_pattern(uint64_t pos, PieceIndex piece_type) {
 	}
 
 	return attack;
+}
+
+uint64_t board_get_friendly(Board board, bool is_black) {
+	uint64_t friendly = 0;
+	uint64_t *friendly_board = board.pieces;
+	if (is_black) {
+		friendly_board += PIECE_COUNT / 2;
+	}
+
+	for (uint32_t i = 0; i < 64; i++) {
+		for (uint32_t idx = 0; idx < PIECE_COUNT / 2; idx++) {
+			friendly |= friendly_board[idx];
+		}
+	}
+
+	return friendly;
+}
+
+uint64_t board_get_enemy(Board board, bool is_black) {
+	uint64_t enemy = 0;
+	uint64_t *enemy_board = board.pieces + PIECE_COUNT / 2;
+	if (is_black) {
+		enemy_board -= PIECE_COUNT / 2;
+	}
+
+	for (uint32_t i = 0; i < 64; i++) {
+		for (uint32_t idx = 0; idx < PIECE_COUNT / 2; idx++) {
+			enemy |= enemy_board[idx];
+		}
+	}
+
+	return enemy;
 }

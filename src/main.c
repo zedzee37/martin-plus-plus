@@ -1,4 +1,5 @@
 #include "board.h"
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -19,8 +20,4 @@ void print_board(uint64_t board) {
 }
 
 int main() {
-	uint64_t pos = 1ULL << 8;
-	print_board(pos);
-	uint64_t piece = get_piece_attack_pattern(pos, B_PAWN_IDX);
-	print_board(piece);
 }
