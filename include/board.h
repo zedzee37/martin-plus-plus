@@ -43,10 +43,10 @@ extern bool board_is_black_checkmated(Board board);
 extern void board_print(Board board);
 extern uint64_t board_get_friendly(Board board, bool is_black);
 extern uint64_t board_get_enemy(Board board, bool is_black);
+extern uint64_t board_get_piece_attack_pattern(Board board, uint64_t pos, PieceIndex piece_type);
 
 extern uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]);
 extern PieceInfo get_piece_info(PieceIndex idx);
 extern uint32_t clamp_piece_idx(PieceIndex piece_idx);
-extern uint64_t get_piece_attack_pattern(uint64_t pos, PieceIndex piece_type);
 
 #endif

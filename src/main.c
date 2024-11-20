@@ -20,4 +20,7 @@ void print_board(uint64_t board) {
 }
 
 int main() {
+	Board board = board_init();
+	uint64_t piece = board_get_piece_attack_pattern(board, 1ULL << 36, W_QUEEN_IDX);
+	print_board(piece);
 }

@@ -128,9 +128,12 @@ uint32_t clamp_piece_idx(PieceIndex piece_idx) {
 	return piece_idx;
 }
 
-uint64_t get_piece_attack_pattern(uint64_t pos, PieceIndex piece_type) {
+uint64_t board_get_piece_attack_pattern(Board board, uint64_t pos, PieceIndex piece_type) {
 	uint64_t attack = 0;
 	bool is_black = piece_type >= PIECE_COUNT / 2;
+	uint64_t enemies = board_get_enemy(board, is_black);
+	uint64_t friendlies = board_get_friendly(board, is_black);
+	uint64_t blockers = enemies | friendlies;
 
 	switch (clamp_piece_idx(piece_type)) {
 		case W_PAWN_IDX:
@@ -138,16 +141,20 @@ uint64_t get_piece_attack_pattern(uint64_t pos, PieceIndex piece_type) {
 			attack = pawn_attack(pos, is_black);
 			break;
 		case W_KING_IDX:
-			attack = orthagonal_slider_attack(pos, 0, 1) | cardinal_slider_attack(pos, 0, 1);
+			attack = orthagonal_slider_attack(pos, blockers, 1) | cardinal_slider_attack(pos, blockers, 1);
+			attack &= ~friendlies;
 			break;
 		case W_QUEEN_IDX:
-			attack = orthagonal_slider_attack(pos, 0, 7) | cardinal_slider_attack(pos, 0, 7);
+			attack = orthagonal_slider_attack(pos, blockers, 7) | cardinal_slider_attack(pos, blockers, 7);
+			attack &= ~friendlies;
 			break;
 		case W_BISHOP_IDX:
-			attack = orthagonal_slider_attack(pos, 0, 7);
+			attack = orthagonal_slider_attack(pos, blockers, 7);
+			attack &= ~friendlies;
 			break;
 		case W_ROOK_IDX:
-			attack = cardinal_slider_attack(pos, 0, 7);
+			attack = cardinal_slider_attack(pos, blockers, 7);
+			attack &= ~friendlies;
 			break;
 		case W_KNIGHT_IDX:
 			attack = knight_attack(pos);
