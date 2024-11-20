@@ -78,117 +78,78 @@ uint64_t orthagonal_slider_attack(uint64_t pos, uint64_t blockers, uint32_t exte
 	return moves;
 }
 
-// for the top - 1:
-/*
-
-11111111
-00000000
-00000000
-00000000
-00000000
-00000000
-00000000
-00000000
-
-*/
-
 // for the top - 2
 /*
 
-11111111
-11111111
-00000000
-00000000
-00000000
-00000000
-00000000
-00000000
+0000000000000000000000000000000000000000000000001111111111111111
+000000000000FFFF
 
-*/
-
-// for the right + 1
-/*
-
-00000001
-00000001
-00000001
-00000001
-00000001
-00000001
-00000001
-00000001
-
-*/
 
 // for the right + 2
 /*
 
-00000011
-00000011
-00000011
-00000011
-00000011
-00000011
-00000011
-00000011
-
-*/
-
-// for the left - 1
-/*
-
-10000000
-10000000
-10000000
-10000000
-10000000
-10000000
-10000000
-10000000
+0000001100000011000000110000001100000011000000110000001100000011
+303030303030303
 
 */
 
 // for the left - 2
 /*
 
-11000000
-11000000
-11000000
-11000000
-11000000
-11000000
-11000000
-11000000
+1100000011000000110000001100000011000000110000001100000011000000
+C0C0C0C0C0C0C0C0
 
 */
 
-// for the bottom + 1
+// for the bottom + 2
 /*
 
-00000000
-00000000
-00000000
-00000000
-00000000
-00000000
-00000000
-11111111
+1111111111111111000000000000000000000000000000000000000000000000
+FFFF000000000000
 
 */
-
-// for the bottom + 1
-/*
-
-00000000
-00000000
-00000000
-00000000
-00000000
-00000000
-11111111
-11111111
-
-*/
-
 uint64_t knight_attack(uint64_t position) {
+	uint64_t attack = 0;
+
+	if (!IS_ON_LEFT_EDGE(position)) {
+		if (!(position & 0xFFFF000000000000)) { // bottom
+			attack |= position << 15;
+		}
+
+		if (!(position & 0x000000000000FFFF)) { // top
+			attack |= position >> 17;
+		}
+	}
+
+	if (!IS_ON_RIGHT_EDGE(position)) {
+		if (!(position & 0xFFFF000000000000)) { // bottom
+			attack |= position << 17;
+		}
+
+		if (!(position & 0x000000000000FFFF)) { // top
+			attack |= position >> 15;
+		}
+	}
+
+	if (!IS_ON_TOP_EDGE(position)) {
+		if (!(position & 0xC0C0C0C0C0C0C0C0)) { // right
+			attack |= position >> 6;
+		}
+
+		if (!(position & 0x303030303030303)) { // left
+			attack |= position >> 10;
+		}
+	}
+
+	if (!IS_ON_BOTTOM_EDGE(position)) {
+		if (!(position & 0xC0C0C0C0C0C0C0C0)) { // right
+			attack |= position << 10;
+		}
+
+		if (!(position & 0x303030303030303)) { // left
+			attack |= position << 6;
+		}
+	}
+
+	return attack;
 }
