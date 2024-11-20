@@ -153,3 +153,39 @@ uint64_t knight_attack(uint64_t position) {
 
 	return attack;
 }
+
+uint64_t pawn_attack(uint64_t position, bool is_black) {
+	uint64_t attack = 0;
+	bool can_move_right = !IS_ON_RIGHT_EDGE(position);
+	bool can_move_left = !IS_ON_LEFT_EDGE(position);
+	bool can_move_forward = false;
+	uint64_t forward_pos = position;
+
+	if (is_black) {
+		can_move_forward = !IS_ON_TOP_EDGE(position);
+
+		if (can_move_forward) {
+			forward_pos >>= 8;
+		}
+	} else {
+		can_move_forward = !IS_ON_BOTTOM_EDGE(position);
+
+		if (can_move_forward) {
+			forward_pos <<= 8;
+		}
+	}
+
+	if (can_move_forward) {
+		if (can_move_right) {
+			attack |= forward_pos << 1;
+		}
+
+		if (can_move_left) {
+			attack |= forward_pos >> 1;
+		}
+
+		attack |= forward_pos;
+	}
+
+	return attack;
+}

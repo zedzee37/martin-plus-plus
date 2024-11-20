@@ -129,9 +129,11 @@ uint32_t clamp_piece_idx(PieceIndex piece_idx) {
 
 uint64_t get_piece_attack_pattern(uint64_t pos, PieceIndex piece_type) {
 	uint64_t attack = 0;
+	bool is_black = piece_type >= PIECE_COUNT / 2;
 
 	switch (clamp_piece_idx(piece_type)) {
 		case W_PAWN_IDX:
+			attack = pawn_attack(pos, is_black);
 			break;
 		case W_KING_IDX:
 			attack = orthagonal_slider_attack(pos, 0, 1) | cardinal_slider_attack(pos, 0, 1);

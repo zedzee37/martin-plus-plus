@@ -1,10 +1,9 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "helpers.h"
 #include <stdbool.h>
 #include <stdint.h>
-
-#define PIECE_COUNT 12
 
 typedef struct PieceInfo {
 	char debug_char;
