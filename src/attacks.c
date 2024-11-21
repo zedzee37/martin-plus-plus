@@ -154,7 +154,7 @@ uint64_t knight_attack(uint64_t position) {
 	return attack;
 }
 
-uint64_t pawn_attack(uint64_t position, bool is_black, uint64_t blockers) {
+uint64_t pawn_attack(uint64_t position, bool is_black, uint64_t blockers, uint64_t enemy_pawns) {
 	uint64_t attack = 0;
 	bool can_move_right = !IS_ON_RIGHT_EDGE(position);
 	bool can_move_left = !IS_ON_LEFT_EDGE(position);

@@ -22,6 +22,6 @@ void print_board(uint64_t board) {
 int main() {
 	Board board = board_init();
 	uint64_t pos = 1ULL << 46;
-	uint64_t piece = board_get_piece_attack_pattern(board, pos, W_PAWN_IDX);
+	uint64_t piece = board_get_attack(board, pos, W_PAWN_IDX);
 	print_board(piece | pos);
 }
