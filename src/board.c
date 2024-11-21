@@ -188,3 +188,15 @@ uint64_t glob_pieces(uint64_t *pieces, uint32_t count) {
 	}
 	return result;
 }
+
+uint64_t board_get_attacked(Board board, uint64_t moves, PieceIndex piece) {
+	bool is_black = piece >= PIECE_COUNT / 2;
+	uint64_t enemies = board_get_enemy(board, is_black);
+	uint64_t masked_move = moves & enemies;
+
+	// handle en passant
+	if (clamp_piece_idx(piece) == W_PAWN_IDX) {
+	}
+
+	return masked_move;
+}
