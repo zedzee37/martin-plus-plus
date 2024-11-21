@@ -136,12 +136,13 @@ uint64_t board_get_attack(Board board, uint64_t pos, PieceIndex piece_type) {
 	uint64_t friendlies = board_get_friendly(board, is_black);
 	uint64_t blockers = enemies | friendlies;
 	uint64_t enemy_pawns = 0;
+	uint64_t en_passant = 0;
 
 	switch (clamp_piece_idx(piece_type)) {
 		case W_PAWN_IDX:
 			// TODO: add en passant and check for pieces on attacking squares
 			enemy_pawns = board.pieces[W_PAWN_IDX + (PIECE_COUNT / 2 * is_black)];
-			attack = pawn_attack(pos, is_black, blockers, enemy_pawns);
+			attack = pawn_attack(pos, is_black, blockers, enemy_pawns, &en_passant);
 			break;
 		case W_KING_IDX:
 			attack = orthagonal_slider_attack(pos, blockers, 1) | cardinal_slider_attack(pos, blockers, 1);

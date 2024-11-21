@@ -154,7 +154,7 @@ uint64_t knight_attack(uint64_t position) {
 	return attack;
 }
 
-uint64_t pawn_attack(uint64_t position, bool is_black, uint64_t blockers, uint64_t enemy_pawns) {
+uint64_t pawn_attack(uint64_t position, bool is_black, uint64_t blockers, uint64_t enemy_pawns, uint64_t *en_passant_pos) {
 	uint64_t attack = 0;
 	bool can_move_right = !IS_ON_RIGHT_EDGE(position);
 	bool can_move_left = !IS_ON_LEFT_EDGE(position);
@@ -187,6 +187,19 @@ uint64_t pawn_attack(uint64_t position, bool is_black, uint64_t blockers, uint64
 		if (!(forward_pos & blockers)) {
 			attack |= forward_pos;
 		}
+	}
+
+	// for en passant
+	if (can_move_right && (position << 1) & enemy_pawns && can_move_forward && (forward_pos << 1) & enemy_pawns) {
+		uint64_t pos = forward_pos << 1;
+		*en_passant_pos = pos;
+		attack |= pos;
+	}
+
+	if (can_move_left && (position >> 1) & enemy_pawns && can_move_forward && (forward_pos >> 1) & enemy_pawns) {
+		uint64_t pos = forward_pos >> 1;
+		*en_passant_pos = pos;
+		attack |= pos;
 	}
 
 	return attack;
