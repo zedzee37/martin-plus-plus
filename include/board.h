@@ -48,5 +48,6 @@ extern uint64_t board_get_piece_attack_pattern(Board board, uint64_t pos, PieceI
 extern uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]);
 extern PieceInfo get_piece_info(PieceIndex idx);
 extern uint32_t clamp_piece_idx(PieceIndex piece_idx);
+extern uint64_t glob_pieces(uint64_t *pieces, uint32_t count);
 
 #endif

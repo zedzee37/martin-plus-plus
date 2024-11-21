@@ -1,6 +1,7 @@
 #include "board.h"
 #include "attacks.h"
 #include "helpers.h"
+#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -161,33 +162,27 @@ uint64_t board_get_piece_attack_pattern(Board board, uint64_t pos, PieceIndex pi
 }
 
 uint64_t board_get_friendly(Board board, bool is_black) {
-	uint64_t friendly = 0;
 	uint64_t *friendly_board = board.pieces;
 	if (is_black) {
 		friendly_board += PIECE_COUNT / 2;
 	}
 
-	for (uint32_t i = 0; i < 64; i++) {
-		for (uint32_t idx = 0; idx < PIECE_COUNT / 2; idx++) {
-			friendly |= friendly_board[idx];
-		}
-	}
-
-	return friendly;
+	return glob_pieces(friendly_board, PIECE_COUNT / 2);
 }
 
 uint64_t board_get_enemy(Board board, bool is_black) {
-	uint64_t enemy = 0;
 	uint64_t *enemy_board = board.pieces + PIECE_COUNT / 2;
 	if (is_black) {
 		enemy_board -= PIECE_COUNT / 2;
 	}
 
-	for (uint32_t i = 0; i < 64; i++) {
-		for (uint32_t idx = 0; idx < PIECE_COUNT / 2; idx++) {
-			enemy |= enemy_board[idx];
-		}
-	}
+	return glob_pieces(enemy_board, PIECE_COUNT / 2);
+}
 
-	return enemy;
+uint64_t glob_pieces(uint64_t *pieces, uint32_t count) {
+	uint64_t result = 0;
+	for (uint32_t i = 0; i < count; i++) {
+		result |= pieces[i];
+	}
+	return result;
 }
