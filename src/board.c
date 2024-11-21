@@ -1,7 +1,6 @@
 #include "board.h"
 #include "attacks.h"
 #include "helpers.h"
-#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 
