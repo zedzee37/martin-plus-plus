@@ -1,5 +1,8 @@
 #pragma once
 
+#include "stdint.h"
+#include "stdio.h"
+
 #define PIECE_COUNT 12
 
 #define RIGHT_EDGE 0x8080808080808080ULL
@@ -12,3 +15,5 @@
 #define IS_ON_TOP_EDGE(pos) ((pos) & TOP_EDGE)
 #define IS_ON_BOTTOM_EDGE(pos) ((pos) & BOTTOM_EDGE)
 #define IS_ON_EDGE(pos) (IS_ON_RIGHT_EDGE(pos) || IS_ON_LEFT_EDGE(pos) || IS_ON_TOP_EDGE(pos) || IS_ON_BOTTOM_EDGE(pos))
+
+extern void print_board(uint64_t board);

@@ -6,6 +6,7 @@
 uint64_t cardinal_slider_attack(uint64_t position, uint64_t blockers, uint32_t extent) {
 	uint64_t moves = 0ULL;
 
+	blockers &= ~position;
 	bool right_done = IS_ON_RIGHT_EDGE(position);
 	bool left_done = IS_ON_LEFT_EDGE(position);
 	bool up_done = IS_ON_TOP_EDGE(position);
@@ -44,6 +45,7 @@ uint64_t cardinal_slider_attack(uint64_t position, uint64_t blockers, uint32_t e
 uint64_t orthagonal_slider_attack(uint64_t pos, uint64_t blockers, uint32_t extent) {
 	uint64_t moves = 0;
 
+	blockers &= ~pos;
 	bool top_right = IS_ON_RIGHT_EDGE(pos) || IS_ON_TOP_EDGE(pos);
 	bool top_left = IS_ON_LEFT_EDGE(pos) || IS_ON_TOP_EDGE(pos);
 	bool bottom_right = IS_ON_RIGHT_EDGE(pos) || IS_ON_BOTTOM_EDGE(pos);

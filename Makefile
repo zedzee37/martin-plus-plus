@@ -5,5 +5,5 @@ run src/*.c:
 	cd ../
 
 test test/*.c:
-	cd build && meson test
+	cd build && meson test --verbose
 	cd ../

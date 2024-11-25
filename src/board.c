@@ -200,3 +200,20 @@ uint64_t board_get_attacked(Board board, uint64_t moves, PieceIndex piece) {
 
 	return masked_move;
 }
+
+uint64_t board_get_square_attackers(Board board, uint64_t pos) {
+	uint64_t attackers = 0;
+	uint64_t white = board_get_friendly(board, false);
+	bool is_black = !(white & pos);
+
+	for (PieceIndex i = 0; i < PIECE_COUNT / 2; i++) {
+		PieceIndex piece = i + (6 * is_black);
+		uint64_t moves = board_get_attack(board, pos, piece);
+		uint64_t attack_pattern = board_get_attacked(board, moves, piece);
+		uint64_t attacked = attack_pattern & board.pieces[piece - (6 * is_black)];
+		print_board(attacked);
+		attackers |= attacked;
+	}
+
+	return attackers;
+}

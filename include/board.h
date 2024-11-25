@@ -44,6 +44,7 @@ extern uint64_t board_get_friendly(Board board, bool is_black);
 extern uint64_t board_get_enemy(Board board, bool is_black);
 extern uint64_t board_get_attack(Board board, uint64_t pos, PieceIndex piece_type);
 extern uint64_t board_get_attacked(Board board, uint64_t moves, PieceIndex piece);
+extern uint64_t board_get_square_attackers(Board board, uint64_t pos);
 
 extern uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]);
 extern PieceInfo get_piece_info(PieceIndex idx);
