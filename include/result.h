@@ -1,9 +1,6 @@
-#ifndef RESULT_H
-#define RESULT_H
+#pragma once
 
 typedef enum Result {
 	MPP_FAILURE,
 	MPP_SUCCESS,
 } Result;
-
-#endif

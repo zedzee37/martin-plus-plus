@@ -1,5 +1,4 @@
-#ifndef HELPERS_H
-#define HELPERS_H
+#pragma once
 
 #define PIECE_COUNT 12
 
@@ -13,5 +12,3 @@
 #define IS_ON_TOP_EDGE(pos) ((pos) & TOP_EDGE)
 #define IS_ON_BOTTOM_EDGE(pos) ((pos) & BOTTOM_EDGE)
 #define IS_ON_EDGE(pos) (IS_ON_RIGHT_EDGE(pos) || IS_ON_LEFT_EDGE(pos) || IS_ON_TOP_EDGE(pos) || IS_ON_BOTTOM_EDGE(pos))
-
-#endif
