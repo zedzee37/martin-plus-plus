@@ -1,6 +1,7 @@
 #include "attacks.h"
 #include "helpers.h"
 #include <stdbool.h>
+#include <stdio.h>
 
 uint64_t cardinal_slider_attack(uint64_t position, uint64_t blockers, uint32_t extent) {
 	uint64_t moves = 0ULL;
@@ -190,13 +191,13 @@ uint64_t pawn_attack(uint64_t position, bool is_black, uint64_t blockers, uint64
 	}
 
 	// for en passant
-	if (can_move_right && (position << 1) & enemy_pawns && can_move_forward && (forward_pos << 1) & enemy_pawns) {
+	if (can_move_right && (position << 1) & enemy_pawns && can_move_forward && !((forward_pos << 1) & enemy_pawns)) {
 		uint64_t pos = forward_pos << 1;
 		*en_passant_pos = pos;
 		attack |= pos;
 	}
 
-	if (can_move_left && (position >> 1) & enemy_pawns && can_move_forward && (forward_pos >> 1) & enemy_pawns) {
+	if (can_move_left && (position >> 1) & enemy_pawns && can_move_forward && !((forward_pos >> 1) & enemy_pawns)) {
 		uint64_t pos = forward_pos >> 1;
 		*en_passant_pos = pos;
 		attack |= pos;

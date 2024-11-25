@@ -140,7 +140,7 @@ uint64_t board_get_attack(Board board, uint64_t pos, PieceIndex piece_type) {
 	switch (clamp_piece_idx(piece_type)) {
 		case W_PAWN_IDX:
 			// TODO: add en passant and check for pieces on attacking squares
-			enemy_pawns = board.pieces[W_PAWN_IDX + (PIECE_COUNT / 2 * is_black)];
+			enemy_pawns = board.pieces[W_PAWN_IDX + (PIECE_COUNT / 2 * !is_black)];
 			attack = pawn_attack(pos, is_black, blockers, enemy_pawns, &en_passant);
 			break;
 		case W_KING_IDX:
