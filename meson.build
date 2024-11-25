@@ -16,11 +16,18 @@ executable(
   link_with: lib,
 )
 
-test_executable = executable(
-  'martin-plus-plus-test',
-  'tests/tests.c',
-  include_directories: include_dirs,
-  link_with: lib,
-)
+test_files = [
+  'attacks',
+  'board',
+]
 
-test('all', test_executable)
+foreach test : test_files
+  test_name = test + '_test'
+  test_exe = executable(
+    test_name,
+    'test/' + test + '.c',
+    include_directories: include_dirs,
+    link_with: lib,
+  )
+  test(test_name, test_exe)
+endforeach

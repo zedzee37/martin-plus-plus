@@ -1,7 +1,9 @@
-run:
+.PHONY: setup run test
+
+run src/*.c:
 	cd build && ninja && ./martin-plus-plus
 	cd ../
 
-test:
+test test/*.c:
 	cd build && meson test
 	cd ../
