@@ -1,6 +1,7 @@
 #include "board.h"
 #include "attacks.h"
 #include "helpers.h"
+#include "result.h"
 #include <stdint.h>
 #include <stdio.h>
 
@@ -128,7 +129,7 @@ uint32_t clamp_piece_idx(PieceIndex piece_idx) {
 	return piece_idx;
 }
 
-uint64_t board_get_attack(Board board, uint64_t pos, PieceIndex piece_type) {
+uint64_t board_get_moves(Board board, uint64_t pos, PieceIndex piece_type) {
 	uint64_t attack = 0;
 	bool is_black = piece_type >= PIECE_COUNT / 2;
 	uint64_t enemies = board_get_enemy(board, is_black);
@@ -208,7 +209,7 @@ uint64_t board_get_square_attackers(Board board, uint64_t pos) {
 
 	for (PieceIndex i = 0; i < PIECE_COUNT / 2; i++) {
 		PieceIndex piece = i + (6 * is_black);
-		uint64_t moves = board_get_attack(board, pos, piece);
+		uint64_t moves = board_get_moves(board, pos, piece);
 		uint64_t attack_pattern = board_get_attacked(board, moves, piece);
 		uint64_t attacked = attack_pattern & board.pieces[piece - (6 * is_black)];
 		print_board(attacked);
@@ -216,4 +217,46 @@ uint64_t board_get_square_attackers(Board board, uint64_t pos) {
 	}
 
 	return attackers;
+}
+
+Result board_get_move_options(Board board, uint64_t pos, uint64_t *moves, uint64_t *attacks) {
+	PieceIndex piece_type;
+
+	if (!board_get_piece_type(board, &piece_type, pos)) {
+		return MPP_FAILURE;
+	}
+
+	uint64_t possible_moves = board_get_moves(board, pos, piece_type);
+
+	// to handle not being able to move into check
+	if (clamp_piece_idx(piece_type) == W_KING_IDX) {
+		uint64_t safe_moves = possible_moves;
+
+		while (safe_moves) {
+			uint64_t move = safe_moves & -safe_moves;
+			safe_moves &= ~move;
+
+			if (board_get_square_attackers(board, move)) {
+				possible_moves &= ~move;
+			}
+		}
+	}
+
+	uint64_t possible_attacks = board_get_attacked(board, possible_moves, piece_type);
+
+	*moves = possible_moves & ~possible_attacks;
+	*attacks = possible_attacks;
+
+	return MPP_SUCCESS;
+}
+
+Result board_get_piece_type(Board board, PieceIndex *idx, uint64_t pos) {
+	for (PieceIndex i = 0; i < PIECE_COUNT / 2; i++) {
+		if (board.pieces[i] & pos) {
+			*idx = i;
+			return MPP_SUCCESS;
+		}
+	}
+
+	return MPP_FAILURE;
 }

@@ -6,6 +6,5 @@
 int main() {
 	Board board = board_init();
 	uint64_t pos = 1ULL << 42;
-	uint64_t piece = board_get_attack(board, pos, W_KNIGHT_IDX);
-	print_board(board_get_attacked(board, piece, W_KNIGHT_IDX));
+	uint64_t piece = board_get_moves(board, pos, W_KNIGHT_IDX);
 }

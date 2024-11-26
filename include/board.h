@@ -1,6 +1,7 @@
 #pragma once
 
 #include "helpers.h"
+#include "result.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -42,9 +43,11 @@ extern bool board_is_black_checkmated(Board board);
 extern void board_print(Board board);
 extern uint64_t board_get_friendly(Board board, bool is_black);
 extern uint64_t board_get_enemy(Board board, bool is_black);
-extern uint64_t board_get_attack(Board board, uint64_t pos, PieceIndex piece_type);
+extern uint64_t board_get_moves(Board board, uint64_t pos, PieceIndex piece_type);
 extern uint64_t board_get_attacked(Board board, uint64_t moves, PieceIndex piece);
 extern uint64_t board_get_square_attackers(Board board, uint64_t pos);
+extern Result board_get_move_options(Board board, uint64_t pos, uint64_t *moves, uint64_t *attacks);
+extern Result board_get_piece_type(Board board, PieceIndex *idx, uint64_t pos);
 
 extern uint32_t get_material(uint64_t pieces[PIECE_COUNT / 2]);
 extern PieceInfo get_piece_info(PieceIndex idx);
