@@ -1,10 +1,6 @@
 project('martin-plus-plus', 'c')
 
 src_files = files(
-  'src/attacks.c',
-  'src/board.c',
-  'src/game.c',
-  'src/helpers.c',
 )
 
 include_dirs = include_directories('include')
@@ -19,7 +15,6 @@ executable(
 )
 
 test_files = [
-  'get_attackers',
 ]
 
 foreach test : test_files
