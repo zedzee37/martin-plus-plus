@@ -5,4 +5,6 @@
 
 typedef uint32_t Square;
 
-extern BitBoard get_pos(Square square);
+inline BitBoard get_pos(Square square) {
+	return 1ULL << square;
+}
