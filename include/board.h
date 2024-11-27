@@ -71,5 +71,9 @@ extern PieceType board_get_piece(Board *board, Square position);
 extern BitBoard board_get_moves(Board *board, Square position);
 extern BitBoard board_get_friendlies(Board *board, bool is_black);
 extern BitBoard board_get_enemies(Board *board, bool is_black);
+extern BitBoard board_get_all(Board *board);
+inline BitBoard board_get_blockers(Board *board, Square square) {
+	return board_get_all(board) & ~square;
+}
 
 extern BitBoard glob_pieces(BitBoard pieces[HALF_PIECE_COUNT]);

@@ -1,6 +1,6 @@
 #include "board.h"
-#include "moves.h"
 #include "piece.h"
+#include <complex.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,4 +81,14 @@ BitBoard glob_pieces(BitBoard pieces[HALF_PIECE_COUNT]) {
 	}
 
 	return globbed;
+}
+
+BitBoard board_get_all(Board *board) {
+	BitBoard result = 0;
+
+	for (PieceType i = 0; i < PIECE_COUNT; i++) {
+		result |= board->pieces[i];
+	}
+
+	return result;
 }
