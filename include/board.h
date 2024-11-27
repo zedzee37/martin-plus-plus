@@ -45,6 +45,12 @@ inline PieceType piece_type_reverse(PieceType piece_type) {
 			? piece_type - HALF_PIECE_COUNT
 			: piece_type + HALF_PIECE_COUNT;
 }
+inline PieceType piece_type_clamp(PieceType piece_type) {
+	return piece_type_is_black(piece_type)
+			? piece_type - HALF_PIECE_COUNT
+			: piece_type;
+}
+
 typedef struct {
 	BitBoard pieces[PIECE_COUNT];
 } Board;
