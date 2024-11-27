@@ -1,5 +1,6 @@
 #include "board.h"
 #include "moves.h"
+#include "piece.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,40 +47,12 @@ PieceType board_get_piece(Board *board, Square position) {
 }
 
 BitBoard board_get_moves(Board *board, Square position) {
-	PieceType piece = board_get_piece(board, position);
-	BitBoard moves = 0;
-	bool is_black = piece_type_is_black(piece);
+	PieceType piece_type = board_get_piece(board, position);
+	bool is_black = piece_type_is_black(piece_type);
 	BitBoard friendlies = board_get_friendlies(board, is_black);
-	BitBoard enemies = board_get_enemies(board, is_black);
-	BitBoard blockers = friendlies | enemies;
-	BitBoard en_passant_move = 0;
-	BitBoard enemy_pawns = 0;
+	Piece piece = PIECES[piece_type];
 
-	switch (piece_type_clamp(piece)) {
-		case W_PAWN:
-			enemy_pawns = board->pieces[W_PAWN * (is_black * HALF_PIECE_COUNT)];
-			moves = pawn_move(position, is_black, blockers, enemy_pawns, &en_passant_move);
-			break;
-		case W_KING:
-			moves = cardinal_slider_move(position, blockers, 1) | orthagonal_slider_move(position, blockers, 1);
-			break;
-		case W_QUEEN:
-			moves = cardinal_slider_move(position, blockers, 7) | orthagonal_slider_move(position, blockers, 7);
-			break;
-		case W_KNIGHT:
-			moves = knight_move(position);
-			break;
-		case W_BISHOP:
-			moves = orthagonal_slider_move(position, blockers, 7);
-			break;
-		case W_ROOK:
-			moves = cardinal_slider_move(position, blockers, 7);
-			break;
-		default:
-			break;
-	}
-
-	return moves & ~friendlies;
+	return piece_move(piece, board, position) & ~friendlies;
 }
 
 BitBoard board_get_friendlies(Board *board, bool is_black) {
