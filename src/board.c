@@ -79,7 +79,7 @@ BitBoard board_get_moves(Board *board, Square position) {
 			break;
 	}
 
-	return moves;
+	return moves & ~friendlies;
 }
 
 BitBoard board_get_friendlies(Board *board, bool is_black) {
