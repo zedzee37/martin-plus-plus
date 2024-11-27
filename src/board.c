@@ -76,7 +76,7 @@ BitBoard board_get_moves(Board *board, Square position) {
 			moves = cardinal_slider_move(position, blockers, 7);
 			break;
 		default:
-			return 0;
+			break;
 	}
 
 	return moves;
