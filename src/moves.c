@@ -1,6 +1,5 @@
 #include "moves.h"
 #include "board.h"
-#include "square.h"
 
 BitBoard cardinal_slider_move(Square square, BitBoard blockers, uint32_t extent) {
 	BitBoard position = get_pos(square);

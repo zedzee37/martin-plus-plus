@@ -1,7 +1,6 @@
 #pragma once
 
 #include "board.h"
-#include "square.h"
 
 extern BitBoard cardinal_slider_move(Square position, BitBoard blockers, uint32_t extent);
 extern BitBoard orthagonal_slider_move(Square position, BitBoard blockers, uint32_t extent);

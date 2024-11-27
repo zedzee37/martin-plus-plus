@@ -4,7 +4,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+typedef uint32_t Square;
+
 typedef uint64_t BitBoard;
+
+inline BitBoard get_pos(Square square) {
+	return 1ULL << square;
+}
 
 #define LEFT_EDGE 0x0101010101010101ULL
 #define RIGHT_EDGE 0x8080808080808080ULL
@@ -33,6 +39,7 @@ typedef enum {
 	B_ROOK,
 	B_BISHOP,
 	PIECE_COUNT,
+	NONE,
 } PieceType;
 
 #define HALF_PIECE_COUNT (PIECE_COUNT / 2)
@@ -60,3 +67,9 @@ extern void board_free(Board *board);
 inline void board_reset(Board *board) {
 	memset(board->pieces, 0, PIECE_COUNT * sizeof(BitBoard));
 }
+extern PieceType board_get_piece(Board *board, Square position);
+extern BitBoard board_get_moves(Board *board, Square position);
+extern BitBoard board_get_friendlies(Board *board, bool is_black);
+extern BitBoard board_get_enemies(Board *board, bool is_black);
+
+extern BitBoard glob_pieces(BitBoard pieces[HALF_PIECE_COUNT]);
