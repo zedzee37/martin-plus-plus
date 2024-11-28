@@ -68,7 +68,6 @@ inline void board_reset(Board *board) {
 	memset(board->pieces, 0, PIECE_COUNT * sizeof(BitBoard));
 }
 extern PieceType board_get_piece(Board *board, Square position);
-extern BitBoard board_get_moves(Board *board, Square position);
 extern BitBoard board_get_friendlies(Board *board, bool is_black);
 extern BitBoard board_get_enemies(Board *board, bool is_black);
 extern BitBoard board_get_all(Board *board);

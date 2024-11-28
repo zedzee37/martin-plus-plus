@@ -1,6 +1,4 @@
 #include "board.h"
-#include "piece.h"
-#include <complex.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,15 +42,6 @@ PieceType board_get_piece(Board *board, Square position) {
 		}
 	}
 	return NONE;
-}
-
-BitBoard board_get_moves(Board *board, Square position) {
-	PieceType piece_type = board_get_piece(board, position);
-	bool is_black = piece_type_is_black(piece_type);
-	BitBoard friendlies = board_get_friendlies(board, is_black);
-	Piece piece = PIECES[piece_type];
-
-	return piece_move(piece, board, position) & ~friendlies;
 }
 
 BitBoard board_get_friendlies(Board *board, bool is_black) {
