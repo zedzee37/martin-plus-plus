@@ -1,7 +1,7 @@
 #include "piece.h"
 #include "board.h"
 #include "core.h"
-#include "moves.h"
+#include "moves.h" L
 
 const Piece PIECES[6] = {
 	[W_PAWN] = { 1, 'P', pawn_move_callback, pawn_attack_callback },
@@ -26,6 +26,17 @@ BitBoard piece_attack(Piece piece, Board *board, Square square) {
 
 BitBoard pawn_move_callback(Board *board, Square square) {
 	BitBoard blockers = board_get_blockers(board, square);
+	PieceType piece_type = board_get_piece(board, square);
+	bool is_black = piece_type_is_black(piece_type);
+	BitBoard en_passant_pos;
+
+	BitBoard enemy_pawns = board->pieces[W_PAWN + (!is_black * 6)];
+
+	BitBoard moves = pawn_move(square, is_black, blockers, enemy_pawns, &en_passant_pos);
+
+	moves &= ~blockers;
+	moves &= ~en_passant_pos;
+	return moves;
 }
 
 BitBoard king_move_callback(Board *board, Square square) {
@@ -55,4 +66,14 @@ BitBoard knight_move_callback(Board *board, Square square) {
 
 BitBoard pawn_attack_callback(Board *board, Square square) {
 	BitBoard blockers = board_get_blockers(board, square);
+	PieceType piece_type = board_get_piece(board, square);
+	bool is_black = piece_type_is_black(piece_type);
+	BitBoard en_passant_pos;
+
+	BitBoard enemy_pawns = board->pieces[W_PAWN + (!is_black * 6)];
+
+	BitBoard moves = pawn_move(square, is_black, blockers, enemy_pawns, &en_passant_pos);
+
+	moves &= blockers & ~board_get_friendlies(board, is_black);
+	return moves;
 }
