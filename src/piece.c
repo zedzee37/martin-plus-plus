@@ -1,7 +1,7 @@
 #include "piece.h"
 #include "board.h"
 #include "core.h"
-#include "moves.h" L
+#include "moves.h"
 
 const Piece PIECES[6] = {
 	[W_PAWN] = { 1, 'P', pawn_move_callback, pawn_attack_callback },
